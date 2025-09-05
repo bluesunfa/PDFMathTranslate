@@ -28,6 +28,8 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install python-bidi tqdm deepl ollama openai xinference-client azure-ai-translation-text flake8 pytest pyinstaller
+        pip install pdfminer.six numpy
+        pip install .
 
     - name: Lint with flake8
       run: |
