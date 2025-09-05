@@ -53,7 +53,7 @@ noto_list = [
     "th",  # Thai
     "ur",  # Urdu
     "uk",  # Ukrainian
-     "fa",  # Persian
+    "fa",  # Persian
 ]
 
 
