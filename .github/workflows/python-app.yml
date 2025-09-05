@@ -27,7 +27,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install python-bidi tqdm deepl ollama openai xinference-client azure-ai-translation-text
+        pip install python-bidi tqdm deepl ollama openai xinference-client azure-ai-translation-text flake8 pytest pyinstaller
 
     - name: Lint with flake8
       run: |
