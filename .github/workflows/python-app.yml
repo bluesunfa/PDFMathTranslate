@@ -17,7 +17,8 @@ jobs:
         os: [ubuntu-latest, windows-latest]
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
     - name: Set up Python
       uses: actions/setup-python@v3
@@ -27,9 +28,10 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install python-bidi tqdm deepl ollama openai xinference-client azure-ai-translation-text flake8 pytest pyinstaller
-        pip install pdfminer.six numpy
+        # نصب پروژه اصلی
         pip install .
+        # نصب پکیج‌های مورد نیاز
+        pip install python-bidi tqdm deepl ollama openai xinference-client azure-ai-translation-text flake8 pytest pyinstaller pdfminer.six numpy
 
     - name: Lint with flake8
       run: |
@@ -38,7 +40,7 @@ jobs:
 
     - name: Test with pytest
       run: |
-        pytest
+        pytest --maxfail=1 --disable-warnings -q
 
     - name: Test PDF translation
       run: |
