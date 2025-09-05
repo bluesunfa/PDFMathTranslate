@@ -53,6 +53,7 @@ noto_list = [
     "th",  # Thai
     "ur",  # Urdu
     "uk",  # Ukrainian
+     "fa",  # Persian
 ]
 
 
@@ -187,7 +188,7 @@ def translate_stream(
     font_list = [("tiro", None)]
 
     font_path = download_remote_fonts(lang_out.lower())
-    noto_name = NOTO_NAME
+    noto_name = "NotoNaskhArabic" if lang_out.lower() == "fa" else NOTO_NAME
     noto = Font(noto_name, font_path)
     font_list.append((noto_name, font_path))
 
@@ -401,6 +402,7 @@ def download_remote_fonts(lang: str):
     lang = lang.lower()
     LANG_NAME_MAP = {
         **{la: "GoNotoKurrent-Regular.ttf" for la in noto_list},
+        "fa": "NotoNaskhArabic-Regular.ttf",
         **{
             la: f"SourceHanSerif{region}-Regular.ttf"
             for region, langs in {
