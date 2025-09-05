@@ -1,0 +1,9 @@
+python-bidi
+deepl
+openai
+requests
+xinference-client
+azure-ai-translation-text
+flake8
+pytest
+pyinstaller
