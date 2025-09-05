@@ -6,6 +6,9 @@ from enum import Enum
 from string import Template
 from typing import Dict
 
+from bidi.algorithm import get_display
+import arabic_reshaper
+
 import numpy as np
 from pdfminer.converter import PDFConverter
 from pdfminer.layout import LTChar, LTFigure, LTLine, LTPage
@@ -165,6 +168,7 @@ class TranslateConverter(PDFConverterEx):
                 self.translator = translator(lang_in, lang_out, service_model, envs=envs, prompt=prompt, ignore_cache=ignore_cache)
         if not self.translator:
             raise ValueError("Unsupported translation service")
+        self.is_rtl = self.translator.lang_out.lower() in ["ar", "fa", "he", "ur"]
 
     def receive_layout(self, ltpage: LTPage):
         # 段落
@@ -515,10 +519,17 @@ class TranslateConverter(PDFConverterEx):
                 line_height -= 0.05
 
             for vals in ops_vals:
-                if vals["type"] == OpType.TEXT:
-                    ops_list.append(gen_op_txt(vals["font"], vals["size"], vals["x"], vals["dy"] + y - vals["lidx"] * size * line_height, vals["rtxt"]))
-                elif vals["type"] == OpType.LINE:
-                    ops_list.append(gen_op_line(vals["x"], vals["dy"] + y - vals["lidx"] * size * line_height, vals["xlen"], vals["ylen"], vals["linewidth"]))
+                ops_list.append(
+                    gen_op_txt(
+                        vals["font"], vals["size"], vals["x"],
+                        vals["dy"] + y - vals["lidx"] * size * line_height,
+                        get_display(arabic_reshaper.reshape(vals["rtxt"])) if self.is_rtl and vals["type"] == OpType.TEXT else vals.get("rtxt", "")
+                    ) if vals["type"] == OpType.TEXT else
+                    gen_op_line(
+                        vals["x"], vals["dy"] + y - vals["lidx"] * size * line_height,
+                        vals["xlen"], vals["ylen"], vals["linewidth"]
+                    )
+                )
 
         for l in lstk:  # 排版全局线条
             if l.linewidth < 5:  # hack 有的文档会用粗线条当图片背景
