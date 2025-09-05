@@ -89,7 +89,7 @@ def get_translate_result(id: str, format: str):
         return {"error": "task failed"}, 400
     doc_mono, doc_dual = result.get()
     to_send = doc_mono if format == "mono" else doc_dual
-    return send_file(io.BytesIO(to_send), "application/pdf")
+    return send_file(io.BytesIO(to_send), mimetype="application/pdf")
 
 
 if __name__ == "__main__":
